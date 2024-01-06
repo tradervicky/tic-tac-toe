@@ -6,7 +6,7 @@ const Board = ({board, onClick}) => {
     <div className='board'>
         {board.map((data, idx)=>
         {
-            return <Box key={idx} value={data} onClick={()=>onClick(idx)}/>
+            return <Box key={idx} value={data} onClick={()=> data === null && onClick(idx)}/>
         }
         
         
