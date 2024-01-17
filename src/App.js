@@ -1,13 +1,13 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Board from './components/Board';
 import ResetButton from './components/ResetButton';
 import ScoreBoard from './components/ScoreBoard';
-
+import ConfettiExplosion from 'react-confetti-explosion';
 
 function App() {
-
+  const [isExploding, setIsExploding] = useState(false);
   const WIN_CONDITIONS = [
     [0,1,2],
     [3,4,5],
@@ -55,8 +55,8 @@ function App() {
       const [x,y,z] = WIN_CONDITIONS[i];
       if(board[x] && board[x] === board[y] && board[y] === board[z]){
         setGameOver(true)
+        setIsExploding(true);
         return board[x];
-
       }
     }
   }
@@ -64,10 +64,25 @@ function App() {
     setGameOver(false)
     setBoard(Array(9).fill(null))
   }
+  useEffect(() => {
+    if (isExploding) {
+      const timeoutId = setTimeout(() => {
+        setIsExploding(false); 
+      }, 5000);
+  
+      return () => clearTimeout(timeoutId); 
+    }
+  }, [isExploding]);
   
  
   return (
     <div className='App'>
+      {isExploding && <ConfettiExplosion 
+       force={0.8}
+       duration={3000}
+       particleCount={250}
+       width={1600}
+        />}
       
       <ScoreBoard score= {score} xPlaying={xPlaying}/>
       <Board board={board} onClick={gameOver ? resetBoard : handleBoxClick}/>
